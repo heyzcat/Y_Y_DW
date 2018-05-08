@@ -145,6 +145,8 @@ public class Daisyworld {
 		//update all patches with thier own tick
 		for(Patch p : patchArray)
 			p.tick();
+		for(Patch p : patchArray)
+			p.sproutDaisy();
 		//calculate global tmeperature
 		calcuGlobalTemp();
 		//update the number of daisy

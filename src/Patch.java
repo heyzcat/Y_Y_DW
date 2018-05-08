@@ -86,7 +86,7 @@ public class Patch {
 		//temperature and the local-heating effect
 		temperature = (temperature + absorbedHeat)/2;
 		//the diffusion of 50% of the temperature value at that patch between its neighbors
-		//temperature = temperature /2;
+		diffuse();
 	}
 	
 	//set the temperature
@@ -127,6 +127,11 @@ public class Patch {
 	
 	//a random algorithm to choose one neighbor patch without daisy on it to sprout seed
 	public void sproutDaisy() {
+		//then calculate the probability to reproduce
+		calcuProbRepro();
+		//sprout seed if possible, else return
+		if(rand.nextFloat() >= probablilityRepro) 
+			return;
 		//a list to record the index of open patch
 		List<Integer> openNeighbors = new ArrayList<>();
 		for(int i =0; i < neighbors.size(); i++)
@@ -158,12 +163,5 @@ public class Patch {
 		}
 		//calculate local temperature in every tick
 		calcuTemperature();
-		//diffuse tmeperature
-		diffuse();
-		//then calculate the probability to reproduce
-		calcuProbRepro();
-		//sprout seed if possible
-		if(rand.nextFloat() < probablilityRepro) 
-			sproutDaisy();
 	}
 }

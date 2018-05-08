@@ -8,7 +8,7 @@ public class Params {
 	 public final static float MAX_REPRO_TEMP = 36.0f;
 	 
 	 //the luminosity of solar
-	 public final static float SOLAR_LUMI = 1.0f;
+	 public final static float SOLAR_LUMI = 1.4f;
 	 
 	 //the albedo of white daisy
 	 public final static float ALBEDO_WHITE = 0.75f;
