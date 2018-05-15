@@ -11,8 +11,6 @@ public class Main {
 			 daisyworld.tick();
 			 
 		 }
-//		Random rand = new Random();
-//		System.out.println(rand.nextInt(2));
 	}
 
 }
