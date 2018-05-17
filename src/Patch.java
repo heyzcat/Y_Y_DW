@@ -85,8 +85,7 @@ public class Patch {
 		//set the temperature at this patch to be the average of the current 
 		//temperature and the local-heating effect
 		temperature = (temperature + absorbedHeat)/2;
-		//the diffusion of 50% of the temperature value at that patch between its neighbors
-		diffuse();
+		
 	}
 	
 	//set the temperature
@@ -101,7 +100,8 @@ public class Patch {
 	 each patch gets 1/8 of 50% of the temperature
 	 from each neighboring patch.)
 	(If a patch has fewer than eight neighbors, each neighbor still 
-	gets an eighth share; the patch keeps any leftover shares.)*/
+	gets an eighth share; the patch keeps any leftover shares.)
+	important: diffuse should happen when all patches calculated temperature*/
 	public void diffuse() {
 		temperature -= (temperature * 0.5 /8) * neighbors.size();
 		for(Patch nei : neighbors)
@@ -130,24 +130,25 @@ public class Patch {
 		//then calculate the probability to reproduce
 		calcuProbRepro();
 		//sprout seed if possible, else return
-		if(rand.nextFloat() >= probablilityRepro) 
-			return;
-		//a list to record the index of open patch
-		List<Integer> openNeighbors = new ArrayList<>();
-		for(int i =0; i < neighbors.size(); i++)
-			if(neighbors.get(i).getState())
-				openNeighbors.add(i);
-		//if no neighbor is open, do nothing
-		// else choose one open neighbor randomly and seed
-		if(openNeighbors.size() == 0)
-			return;
-		else {			
-			int index = rand.nextInt(openNeighbors.size());
-			//generate a new daisy with the same type as daisy on this patch
-			Daisy seedDaisy = new Daisy(this.daisy.getType());
-			//set the seed daisy onto the chosen neighbor
-			neighbors.get(openNeighbors.get(index)).setDaisy(seedDaisy);
+		if(rand.nextFloat() < probablilityRepro) {
+			//a list to record the index of open patch
+			List<Integer> openNeighbors = new ArrayList<>();
+			for(int i =0; i < neighbors.size(); i++)
+				if(neighbors.get(i).getState())
+					openNeighbors.add(i);
+			//if no neighbor is open, do nothing
+			// else choose one open neighbor randomly and seed
+			if(openNeighbors.size() == 0)
+				return;
+			else {			
+				int index = rand.nextInt(openNeighbors.size());
+				//generate a new daisy with the same type as daisy on this patch
+				Daisy seedDaisy = new Daisy(this.daisy.getType());
+				//set the seed daisy onto the chosen neighbor
+				neighbors.get(openNeighbors.get(index)).setDaisy(seedDaisy);
+			}
 		}
+		
 			
 	}
 	

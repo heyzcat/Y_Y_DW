@@ -145,12 +145,17 @@ public class Daisyworld {
 		//update all patches with thier own tick
 		for(Patch p : patchArray)
 			p.tick();
+		//diffuse the temperature
+		for(Patch p : patchArray)
+			p.diffuse();
+		//time to sprout
 		for(Patch p : patchArray)
 			p.sproutDaisy();
 		//calculate global tmeperature
 		calcuGlobalTemp();
 		//update the number of daisy
 		updateDaisyNumber();
+		
 		
 		System.out.println("global temperature: " + globalTemperature);
 		System.out.println("white number: " +  numberWhite );
