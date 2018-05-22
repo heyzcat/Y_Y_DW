@@ -17,6 +17,8 @@ public class Patch {
 	private float probablilityRepro;	
 	//the list of neighbor patches
 	private List<Patch> neighbors;
+	//the temperature got from neighbors
+	private float tempFromNei;
 	//a random variable to generate random number
 	public static Random rand = new Random();
 	
@@ -59,7 +61,10 @@ public class Patch {
 	public float getTemperature() {
 		return this.temperature;
 	}
-	
+	//gain temperature from neighbor
+	public void gainTempFromNei(float temp) {
+		this.tempFromNei += temp;
+	}
 /*	calculate the current temprature of patch
   the percentage of absorbed energy is calculated (1 - albedo-of-surface) and 
 	then multiplied by the solar-luminosity to give a scaled absorbed-luminosity.*/
@@ -68,13 +73,17 @@ public class Patch {
 		//equals to albedo of daisy if there is daisy here
 		//or is albedo of ground
 		float realAlbedo;
-		if(isOpen ) 
+		if(isOpen || daisy.isSeed()) 
 			realAlbedo = Params.ALBEDO_GROUND;
-		else
-			realAlbedo = this.daisy.getType() == 
-				Type.WHITE ? Params.ALBEDO_WHITE : Params.ALBEDO_BLACK;
+		else if(this.daisy.getType() == Type.WHITE )
+			realAlbedo = Params.ALBEDO_WHITE ;
+		else if (this.daisy.getType() == Type.GRAY)
+			realAlbedo = Params.ALBEDO_GRAY;
+		else 
+			realAlbedo = Params.ALBEDO_BLACK;
+		
 		//the actual absorbed luminosity
-		float absorbedLumino = (1 - realAlbedo) * Params.SOLAR_LUMI;
+		float absorbedLumino = (1 - realAlbedo) * (Params.SOLAR_LUMI );
 //	 local-heating is calculated as logarithmic function of solar-luminosity
 		//value to store absorbed heat
 		float absorbedHeat;
@@ -88,9 +97,10 @@ public class Patch {
 		
 	}
 	
-	//set the temperature
-	public void addTemperature(float temp) {
-		this.temperature += temp;
+	//set the final temperature
+	public void calcFinalTemperature() {
+		this.temperature += this.tempFromNei;
+		this.tempFromNei = 0;
 	}
 	
 
@@ -103,9 +113,10 @@ public class Patch {
 	gets an eighth share; the patch keeps any leftover shares.)
 	important: diffuse should happen when all patches calculated temperature*/
 	public void diffuse() {
-		temperature -= (temperature * 0.5 /8) * neighbors.size();
 		for(Patch nei : neighbors)
-			nei.addTemperature((float) (temperature * 0.5 / 8));
+			nei.gainTempFromNei((float) (temperature * 0.5 / 8));
+		temperature -= (temperature * 0.5 /8) * neighbors.size();
+
 	}
 	
 	
@@ -147,9 +158,7 @@ public class Patch {
 				//set the seed daisy onto the chosen neighbor
 				neighbors.get(openNeighbors.get(index)).setDaisy(seedDaisy);
 			}
-		}
-		
-			
+		}		
 	}
 	
 	//simulate one time tick happen on this ground patch 
@@ -164,5 +173,8 @@ public class Patch {
 		}
 		//calculate local temperature in every tick
 		calcuTemperature();
+		//System.out.println("patch temperature: " + temperature);
+		//diffuse temperature to neighbors
+		diffuse();
 	}
 }

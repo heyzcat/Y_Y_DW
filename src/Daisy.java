@@ -1,7 +1,7 @@
 //daisy class is used to simulate daisy, this class will extend 
 //white daisy and black daisy
 enum Type {
-	WHITE, BLACK
+	WHITE, BLACK, GRAY
 }
 public class Daisy {
 	private Type type;

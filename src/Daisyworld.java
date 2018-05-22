@@ -9,6 +9,8 @@ public class Daisyworld {
 	private Patch[] patchArray;
 	//number of white daisy
 	private int numberWhite;
+	//number of gray daisy
+	private int numberGray;
 	//number of black daisy
 	private int numberBlack;
 	//global temperature
@@ -23,9 +25,7 @@ public class Daisyworld {
 		for(int i = 0; i < Params.NUMBER_PATCH; i++) {
 			Patch p = new Patch(i);
 			patchArray[i] = p;
-			
-
-					
+				
 		}
 		
 		initNeighbors();
@@ -69,6 +69,11 @@ public class Daisyworld {
 		return this.numberWhite;
 	}
 	
+	//get the number of gray daisy
+	public int getNumGray() {
+		return this.numberGray;
+	}
+		
 	//get the number of black daisy
 	public int getNumBlack() {
 		return this.numberBlack;
@@ -97,6 +102,22 @@ public class Daisyworld {
 				i++;
 			}						
 		}
+		
+		//set gray daisy
+				for(int i = 0; i < Params.NUMBER_PATCH * Params.START_PERC_GRAY; ) {
+					//index of the chosen patch to set
+					int index = rand.nextInt(Params.NUMBER_PATCH);
+					
+					//set daisy into patch
+					if(patchArray[index].getState()) {
+						//the daisy to set, random age
+						Daisy daisy = new Daisy(Type.GRAY);
+						daisy.setAge(rand.nextInt(Params.MAX_AGE));
+						patchArray[index].setDaisy(daisy);
+						i++;
+					}						
+				}
+				
 		//set black daisy
 		for(int i = 0; i < Params.NUMBER_PATCH * Params.START_PERC_BLACK; ) {
 			//index of the chosen patch to set
@@ -127,15 +148,17 @@ public class Daisyworld {
 		//check state first, then check which kind of daisy
 		numberBlack = 0;
 		numberWhite = 0;
-		
+		numberGray = 0;
 		for( Patch p : patchArray) 
 			//if it is not open
 			if(!p.getState() && !p.getDaisy().isSeed()) {
 				//if daisy is black. increase black number
 				if(p.getDaisy().getType() == Type.WHITE)
 					this.numberWhite++;
-				else
+				else if(p.getDaisy().getType() == Type.BLACK)
 					this.numberBlack++;
+				else 
+					this.numberGray++;
 			}
 					
 	}
@@ -145,20 +168,24 @@ public class Daisyworld {
 		//update all patches with thier own tick
 		for(Patch p : patchArray)
 			p.tick();
-		//diffuse the temperature
+		//calculate  the final temperature
 		for(Patch p : patchArray)
-			p.diffuse();
+			p.calcFinalTemperature();
 		//time to sprout
 		for(Patch p : patchArray)
 			p.sproutDaisy();
+		
+		//for(Patch p : patchArray)
+			//System.out.println("patch temperature: " + p.getTemperature());;
 		//calculate global tmeperature
 		calcuGlobalTemp();
 		//update the number of daisy
 		updateDaisyNumber();
 		
 		
-		System.out.println("global temperature: " + globalTemperature);
-		System.out.println("white number: " +  numberWhite );
-		System.out.println("black number: " + numberBlack);
+//		System.out.println("global temperature: " + globalTemperature);
+//		System.out.println("white number: " +  numberWhite );
+//		System.out.println("black number: " + numberBlack);
+//		System.out.println("gray number: " + numberGray);
 	}
 }

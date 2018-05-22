@@ -8,10 +8,13 @@ public class Params {
 	 public final static float MAX_REPRO_TEMP = 36.0f;
 	 
 	 //the luminosity of solar
-	 public final static float SOLAR_LUMI = 1.4f;
+	 public final static float SOLAR_LUMI = 1.0f;
 	 
 	 //the albedo of white daisy
 	 public final static float ALBEDO_WHITE = 0.75f;
+	 
+	//the albedo of gray daisy
+	public final static float ALBEDO_GRAY = 0.5f;
 	 
 	 //the albedo of black daisy
 	 public final static float ALBEDO_BLACK = 0.25f;
@@ -31,11 +34,14 @@ public class Params {
 	 //initial percentage of white daisy
 	 public final static float START_PERC_WHITE = 0.2f;
 	 
+	//initial percentage of gray daisy
+	 public final static float START_PERC_GRAY = 0.f;
+	 
 	 //initial percentage of black daisy
 	 public final static float START_PERC_BLACK = 0.2f;
 	 
 	 //initial tmeperature of all ground patches
-	 public final static float START_TEMP = 35.0f;
+	 public final static float START_TEMP = 20.0f;
 	 
 	 
 	 
